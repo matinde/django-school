@@ -1,0 +1,51 @@
+<!-- students.html -->
+{% extends 'base.html' %}
+
+{% block content %
+<h1>Students</h1>
+
+  {% for student in students %}
+
+    <table>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Grade</th>
+            <th>Classroom</th>
+            <th>Teacher</th>
+            <th>Parent1</th>
+            <th>Parent2</th>
+            
+        </tr>
+        <tr>
+            <td>{{ student.first_name }}</td>
+            <td>{{ student.last_name }}</td>
+            <td>{{ student.grade }}</td>
+            <td>{{ student.classroom }}</td>
+            <td>{{ student.teacher }}</td>
+            <td>{{ student.primary_parent }}</td>
+            <td>{{ student.second_parent }}</td>
+           
+        </tr>
+    </table>
+
+    {% if page_obj.has_previous %}
+    <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+    {% endif %}
+
+    {% for page in paginator.page_range %}
+    {% if page == page_obj.number %}
+        <strong>{{ page }}</strong>
+    {% else %}
+        <a href="?page={{ page }}">{{ page }}</a>
+    {% endif %}
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}">Next</a>
+    {% endif %}
+
+  {% endfor %}
+
+           
+
