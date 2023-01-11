@@ -29,18 +29,13 @@ class StudentDetailView(DetailView):
         pk = self.kwargs.get("pk")
         return get_object_or_404(Student, uid=pk)
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["subjects"] = self.get_object().subjects.all()
-        return context
-
 class StudentCreateView(CreateView):
     template_name = "students/student_form.html"
     model = Student
     form_class = StudentForm
     success_url = "/students/"
     
-    def form_valid(self, form):
+    def form_valid(self, form): 
         form.save()
         messages.success(self.request, "Student created successfully.")
         return super().form_valid(form)

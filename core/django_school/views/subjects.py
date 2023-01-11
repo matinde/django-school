@@ -11,7 +11,7 @@ from django_school.models import Exam
 from django_school.models import Subject
 
 class SubjectListView(ListView):
-    template_name = "subjects.html"
+    template_name = "subjects/subjects.html"
     model = Subject
     context_object_name = "subjects"
     paginate_by = 10
@@ -19,7 +19,7 @@ class SubjectListView(ListView):
 # Create a view for one subject
 
 class SubjectDetailView(DetailView):
-    template_name = "subject_detail.html"
+    template_name = "subjects/subject_detail.html"
     model = Subject
     context_object_name = "subject"
 

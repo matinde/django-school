@@ -4,7 +4,7 @@
 {% block content %}
 
 <section class="">
-<h1 class="title">Students</h1>
+<h1 class="title">Teachers</h1>
 
 <div class="column is-5">
  <input type="text" class="input" placeholder="Search for names.."><br><br>
@@ -15,23 +15,19 @@
             <th>Last Name</th>
             <th>Grade</th>
             <th>Classroom</th>
-            <th>Parent1</th>
-            <th>Parent2</th>
+            <th>Department</th>
+           
             
         </tr>
-        {% for s in students %}
         <tr>
-        
-            <td><a href="{% url 'student_detail' s.uid %}"> {{s.first_name }}</a></td>
-            <td>{{ s.last_name }}</td>
-            <td>{{ s.grade }}</td>
-            <td>{{ s.classroom }}</td>
-            <td>{{ s.parents.first_name}}</td>
-            <td>{{ s.second_parent }}</td>
+        {% for student in students %}
+            <td>{{ student.first_name }}</td>
+            <td>{{ student.last_name }}</td>
+            <td>{{ student.grade }}</td>
+            <td>{{ student.classroom }}</td>
+            <td>{{ student.classroom }}</td>
            
         </tr>
-        
-        {% endfor %}
     </table>
 
     {% if page_obj.has_previous %}
@@ -50,7 +46,7 @@
     <a href="?page={{ page_obj.next_page_number }}">Next</a>
     {% endif %}
 
-  
+  {% endfor %}
 
 </section>
 {% endblock %}

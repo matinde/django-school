@@ -11,7 +11,7 @@ from django_school.models import Exam
 from django_school.models import Subject
 
 class ParentListView(ListView):
-    template_name = "parents.html"
+    template_name = "parents/parents.html"
     model = Parent
     context_object_name = "parents"
     paginate_by = 10

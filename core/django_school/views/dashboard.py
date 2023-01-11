@@ -14,5 +14,25 @@ from django_school.models import Subject
 class DashboardView(ListView):
     template_name = "home/dashboard.html"
     model = School
-    context_object_name = "schools"
-    paginate_by = 10
+    context_object_name = "all_data"
+
+    def get_context_data(self, **kwargs):
+        """
+        Adding all models to the dashboard will help administrators to search and get data.
+        We can optimize it later.
+        """
+        context = super().get_context_data(**kwargs)
+        context['students'] = Student.objects.all()
+        context['teachers'] = Teacher.objects.all()
+        context['parents'] = Parent.objects.all()
+        context['classrooms'] = Classroom.objects.all()
+        context['subjects'] = Subject.objects.all()
+
+        context['student_number'] = Student.objects.all().count()
+        context['teacher_number'] = Teacher.objects.all().count()
+        context['parent_number'] = Parent.objects.all().count()
+        context['classroom_number'] = Classroom.objects.all().count()
+        context['exam_number'] = Exam.objects.all().count()
+        context['subject_number'] = Subject.objects.all().count()
+
+        return context

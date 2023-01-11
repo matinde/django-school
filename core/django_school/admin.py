@@ -6,6 +6,11 @@ from .models import *
 class SchoolAdmin(admin.ModelAdmin):
     list_display = ('name', 'address', 'logo', 'website', 'phone_numbers', 'email',)
 
+@admin.register(Student)
+class StudentAdmin(admin.ModelAdmin):
+    list_display = ('first_name', 'last_name', 'grade', 'registration_number', 'uid', )
+    list_filter = ('first_name', 'last_name', 'grade', 'registration_number', )
+
 
 @admin.register(Teacher)
 class TeacherAdmin(admin.ModelAdmin):
@@ -22,3 +27,12 @@ class SubjectAdmin(admin.ModelAdmin):
     list_display = ('name', 'teacher', 'duration', )
     list_filter = ('name', 'teacher',)
 
+@admin.register(Grade)
+class GradeAdmin(admin.ModelAdmin):
+    list_display = ('name', )
+    list_filter = ('name',)
+
+@admin.register(Classroom)
+class ClassroomAdmin(admin.ModelAdmin):
+    list_display = ('name', )
+    list_filter = ('name',)

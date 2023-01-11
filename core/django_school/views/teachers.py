@@ -11,7 +11,7 @@ from django_school.models import Subject
 
 
 class TeacherListView(ListView):
-    template_name = "teachers.html"
+    template_name = "teachers/teachers.html"
     model = Teacher
     context_object_name = "teachers"
     paginate_by = 10
