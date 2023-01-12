@@ -2,12 +2,27 @@
 
 {% block content %}
     <h1 class="title">Student Form</h1>
+    {% if form.errors %}
+        <div class="notification is-danger">
+            <ul class="list">
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
     <form method="post">
         {% csrf_token %}
         <div class="column box is-6 is-centered">
         <div class="is-small field">
           <div class="label">First Name</div>
           {{ form.first_name }}
+        </div>
+        <div class="is-small field">
+          <div class="label">Last Name</div>
+          {{ form.last_name }}
         </div>
         <div class="is-small field">
           <div class="label">Status</div>

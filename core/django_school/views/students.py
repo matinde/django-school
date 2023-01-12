@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, reverse, redirect
 from django.contrib import messages
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django_school.forms import StudentForm, TeacherForm, ParentForm, ClassroomForm, ExamForm, SubjectForm
@@ -28,12 +28,17 @@ class StudentDetailView(DetailView):
     def get_object(self):
         pk = self.kwargs.get("pk")
         return get_object_or_404(Student, uid=pk)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['parents'] = self.object.parents.all()
+        context['subjects'] = self.object.grade.subjects.all()
+        return context
 
 class StudentCreateView(CreateView):
     template_name = "students/student_form.html"
     model = Student
     form_class = StudentForm
-    success_url = "/students/"
     
     def form_valid(self, form): 
         form.save()
@@ -44,11 +49,18 @@ class StudentCreateView(CreateView):
         messages.error(self.request, "Error creating student.")
         return super().form_invalid(form)
 
+    def get_success_url(self):
+        return reverse("student_detail", kwargs={"pk": self.object.uid})
+
 class StudentUpdateView(UpdateView):
     template_name = "students/student_form.html"
     model = Student
     form_class = StudentForm
-    success_url = "/students/"
+    context_object_name = "student"
+
+    def get_object(self):
+        pk = self.kwargs.get("pk")
+        return get_object_or_404(Student, uid=pk)
     
     def form_valid(self, form):
         form.save()
@@ -58,6 +70,9 @@ class StudentUpdateView(UpdateView):
     def form_invalid(self, form):
         messages.error(self.request, "Error updating student.")
         return super().form_invalid(form)
+
+    def get_success_url(self):
+        return reverse("student_detail", kwargs={"pk": self.object.uid})
 
 class StudentDeleteView(DeleteView):
     template_name = "students/student_delete.html"
