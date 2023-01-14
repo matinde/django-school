@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    
+    <form method="post">
+        {% csrf_token %}
+        <div class="column box is-6 is-centered">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="notification">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        <div class="is-small field">
+          <div class="label">First Name</div>
+          {{ form.first_name }}
+        </div>
+        <div class="is-small field">
+          <div class="label">Last Name</div>
+          {{ form.last_name }}
+        </div>
+        
+        <div class=" field">
+          <div class="label">Email</div>
+          {{ form.email }}
+        </div>
+        <div class=" field">
+          <div class="label">Phone Numbers</div>
+          {{ form.phone_numbers }}
+        </div>
+      
+        </div>
+        <input type="submit" value="Submit" class="button is-primary">
+    </div>
+    </form>
+{% endblock %}
+

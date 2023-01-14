@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, reverse
 from django.contrib import messages
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django_school.forms import StudentForm, TeacherForm, ParentForm, ClassroomForm, ExamForm, SubjectForm
@@ -19,19 +19,18 @@ class TeacherListView(ListView):
 # Create a view for one teacher
 
 class TeacherDetailView(DetailView):
-    template_name = "teacher_detail.html"
+    template_name = "teachers/teacher_detail.html"
     model = Teacher
     context_object_name = "teacher"
 
     def get_object(self):
         pk = self.kwargs.get("pk")
-        return get_object_or_404(Teacher, pk=pk)
+        return get_object_or_404(Teacher, uid=pk)
 
 class TeacherCreateView(CreateView):
     template_name = "student_form.html"
     model = Teacher
     form_class = TeacherForm
-    success_url = "/teachers/"
     
     def form_valid(self, form):
         form.save()
@@ -42,11 +41,17 @@ class TeacherCreateView(CreateView):
         messages.error(self.request, "Error creating teacher.")
         return super().form_invalid(form)
 
+    def get_success_url(self):
+        return reverse("teacher_detail", kwargs={"pk": self.object.uid})
+
 class TeacherUpdateView(UpdateView):
-    template_name = "teacher_form.html"
+    template_name = "teachers/teacher_form.html"
     model = Teacher
     form_class = TeacherForm
-    success_url = "/teachers/"
+    
+    def get_object(self):
+        pk = self.kwargs.get("pk")
+        return get_object_or_404(Teacher, uid=pk)
     
     def form_valid(self, form):
         form.save()
@@ -56,6 +61,9 @@ class TeacherUpdateView(UpdateView):
     def form_invalid(self, form):
         messages.error(self.request, "Error updating teacher.")
         return super().form_invalid(form)
+
+    def get_success_url(self):
+        return reverse("teacher_detail", kwargs={"pk": self.object.uid})
 
 class TeacherDeleteView(DeleteView):
     template_name = "teacher_delete.html"

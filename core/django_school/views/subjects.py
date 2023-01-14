@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, reverse, redirect
 from django.contrib import messages
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django_school.forms import StudentForm, TeacherForm, ParentForm, ClassroomForm, ExamForm, SubjectForm
@@ -28,10 +28,9 @@ class SubjectDetailView(DetailView):
         return get_object_or_404(Subject, uid=pk)
 
 class SubjectCreateView(CreateView):
-    template_name = "subject_form.html"
+    template_name = "subjects/subject_form.html"
     model = Subject
     form_class = SubjectForm
-    success_url = "/subjects/"
     
     def form_valid(self, form):
         form.save()
@@ -42,11 +41,17 @@ class SubjectCreateView(CreateView):
         messages.error(self.request, "Error creating subject.")
         return super().form_invalid(form)
 
+    def get_success_url(self):
+        return reverse("subject_detail", kwargs={"pk": self.object.uid})
+
 class SubjectUpdateView(UpdateView):
-    template_name = "subject_form.html"
+    template_name = "subjects/subject_form.html"
     model = Subject
     form_class = SubjectForm
-    success_url = "/subjects/"
+
+    def get_object(self):
+        pk = self.kwargs.get("pk")
+        return get_object_or_404(Subject, uid=pk)
     
     def form_valid(self, form):
         form.save()
@@ -56,6 +61,9 @@ class SubjectUpdateView(UpdateView):
     def form_invalid(self, form):
         messages.error(self.request, "Error updating subject.")
         return super().form_invalid(form)
+
+    def get_success_url(self):
+        return reverse("subject_detail", kwargs={"pk": self.object.uid})
 
 class SubjectDeleteView(DeleteView):
     template_name = "subject_delete.html"

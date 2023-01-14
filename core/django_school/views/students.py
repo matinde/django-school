@@ -63,7 +63,7 @@ class StudentUpdateView(UpdateView):
         return get_object_or_404(Student, uid=pk)
     
     def form_valid(self, form):
-        form.save()
+        form.save() 
         messages.success(self.request, "Student updated successfully.")
         return super().form_valid(form)
     

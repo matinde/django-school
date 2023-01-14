@@ -1,0 +1,51 @@
+<!-- students.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+
+<section class="">
+<h1 class="title">Parents</h1>
+
+<div class="column is-5">
+ <input type="text" class="input" placeholder="Search for names.."><br><br>
+</div>
+    <table class="table is-fullwidth">
+        <tr>
+            
+            <th>Name</th>
+            <th>Email</th>
+            <th>Number</th>
+            <th>ID Number</th>
+            
+        </tr>
+        {% for p in parents %}
+        <tr>
+        
+            <td><a href="{% url 'parent_detail' p.uid %}"> {{ p.first_name }} {{ p.last_name }}</a></td>
+            <td>{{ p.email }}</td>
+            <td>{{ p.phone_numbers }}</td>
+            <td>{{ p.identification_number }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    {% if page_obj.has_previous %}
+    <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+    {% endif %}
+
+    {% for page in paginator.page_range %}
+    {% if page == page_obj.number %}
+        <strong>{{ page }}</strong>
+    {% else %}
+        <a href="?page={{ page }}">{{ page }}</a>
+    {% endif %}
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}">Next</a>
+    {% endif %}
+
+  
+
+</section>
+{% endblock %}

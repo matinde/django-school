@@ -17,6 +17,7 @@ class Teacher(models.Model):
 
     STATUS = [("active", "Active"), ("inactive", "Inactive")]
     GENDER = [("male", "Male"), ("female", "Female")]
+    DEPARTMENT = [("sciences", "Sciences"), ("arts", "Arts"), ("commerce", "Commerce")]
 
     uid = models.UUIDField(default=uuid.uuid4, editable=False)
     current_status = models.CharField(max_length=10, choices=STATUS, default="active")
@@ -26,6 +27,7 @@ class Teacher(models.Model):
     phone_numbers = models.CharField(max_length=255)
     gender = models.CharField(max_length=10, choices=GENDER)
     school = models.ForeignKey(School, on_delete=models.CASCADE)
+    department = models.CharField(max_length=255, choices=DEPARTMENT, blank=True, null=True)
     photo = models.ImageField()
 
     def __str__(self):
@@ -75,35 +77,7 @@ class Grade(models.Model):
     def __str__(self):
         return self.name
 
-    def get_all_subjects(self):
-        """
-        A grade has many set subjects. But we expect that any given grade is set for every learner in that grade. 
-        """
-        return self.subjects.all()
-
-    def add_subject(self, subject):
-        """
-        Administrators, can add subjects to a certain grade, in lower learning institutions.
-        However, in upper learning institutions like Universities, the learner adds the subjects.
-        """
-        return self.subjects.add(subject)
-
-    def remove_subject(self, subject):
-        """
-        Removes a subject from a grade.
-        """
-        return self.subjects.remove(subject)
-
-    def edit_subject(self, name, teacher, description, grade, duration):
-        """
-        Edits a subject from a grade.
-        """
-        self.name = name
-        self.teacher = teacher
-        self.description = description
-        self.grade = grade
-        self.duration = duration
-        self.save()
+    
 
 
 class Parent(models.Model):
@@ -116,7 +90,7 @@ class Parent(models.Model):
     identification_number = models.CharField(max_length=255)
 
     def __str__(self):
-        return self.first_name + "" + self.last_name
+        return self.first_name + " " + self.last_name
 
 class Student(models.Model):
     """
@@ -142,7 +116,7 @@ class Student(models.Model):
     
     
     def __str__(self):
-        return self.first_name + "" + self.last_name
+        return self.first_name + " " + self.last_name
 
     def get_subjects(self):
         """

@@ -14,7 +14,7 @@ class StudentAdmin(admin.ModelAdmin):
 
 @admin.register(Teacher)
 class TeacherAdmin(admin.ModelAdmin):
-    list_display = ('current_status', 'first_name', 'last_name', 'email', 'phone_numbers', )
+    list_display = ('first_name', 'current_status', 'last_name', 'email', 'phone_numbers', )
     list_filter = ('current_status', 'first_name', 'last_name', 'email', 'phone_numbers', )
 
 @admin.register(Parent)

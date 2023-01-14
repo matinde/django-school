@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, reverse
 from django.contrib import messages
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django_school.forms import StudentForm, TeacherForm, ParentForm, ClassroomForm, ExamForm, SubjectForm
@@ -19,19 +19,24 @@ class ParentListView(ListView):
 # Create a view for one subject
 
 class ParentDetailView(DetailView):
-    template_name = "parent_detail.html"
+    template_name = "parents/parent_detail.html"
     model = Parent
     context_object_name = "parent"
 
     def get_object(self):
         pk = self.kwargs.get("pk")
-        return get_object_or_404(Subject, uid=pk)
+        return get_object_or_404(Parent, uid=pk)
+
+    # Get the list of students for this parent
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['students'] = self.object.students.all()
+        return context
 
 class ParentCreateView(CreateView):
-    template_name = "subject_form.html"
+    template_name = "parents/parent_form.html"
     model = Parent
     form_class = ParentForm
-    success_url = "/parents/"
     
     def form_valid(self, form):
         form.save()
@@ -42,11 +47,17 @@ class ParentCreateView(CreateView):
         messages.error(self.request, "Error creating parent.")
         return super().form_invalid(form)
 
+    def get_success_url(self):
+        return reverse("parent_detail", kwargs={"pk": self.object.uid})
+
 class ParentUpdateView(UpdateView):
-    template_name = "parent_form.html"
+    template_name = "parents/parent_form.html"
     model = Parent
     form_class = ParentForm
-    success_url = "/parents/"
+
+    def get_object(self):
+        pk = self.kwargs.get("pk")
+        return get_object_or_404(Parent, uid=pk)
     
     def form_valid(self, form):
         form.save()
@@ -57,8 +68,11 @@ class ParentUpdateView(UpdateView):
         messages.error(self.request, "Error updating parent.")
         return super().form_invalid(form)
 
+    def get_success_url(self):
+        return reverse("parent_detail", kwargs={"pk": self.object.uid})
+
 class ParentDeleteView(DeleteView):
-    template_name = "subject_delete.html"
+    template_name = "parents/subject_delete.html"
     model = Subject
     context_object_name = "parent"
     success_url = "/parents/"
