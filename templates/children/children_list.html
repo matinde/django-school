@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+
+{% block title %}My Students (Children) - Django School{% endblock %}
+
+{% block page_title %}My Students (Children){% endblock %}
+
+{% block page_actions %}
+<div class="level-item">
+    <a href="{% url 'student_create' %}" class="button is-primary">
+        <span class="icon">
+            <i class="fas fa-user-plus"></i>
+        </span>
+        <span>Register New Student</span>
+    </a>
+</div>
+{% include "includes/topbar.html" %}
+{% endblock %}
+
+{% block content %}
+    <div class="box">
+        <div class="level mb-5">
+            <div class="level-left">
+                <div class="level-item">
+                    <h2 class="subtitle">Manage your children's education</h2>
+                </div>
+            </div>
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="notification {% if message.tags %}is-{{ message.tags }}{% endif %}">
+                    <button class="delete"></button>
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% if students %}
+            <div class="columns is-multiline mt-4">
+                {% for student in students %}
+                    <div class="column is-4">
+                        <div class="card">
+                            <div class="card-content">
+                                <div class="media">
+                                    {% if student.photo %}
+                                        <div class="media-left">
+                                            <figure class="image is-64x64">
+                                                <img src="{{ student.photo.url }}" alt="{{ student.user.get_full_name }}" class="is-rounded">
+                                            </figure>
+                                        </div>
+                                    {% endif %}
+                                    <div class="media-content">
+                                        <p class="title is-4">{{ student.user.get_full_name }}</p>
+                                        <p class="subtitle is-6">Registration #: {{ student.registration_number }}</p>
+                                    </div>
+                                </div>
+
+                                <div class="content">
+                                    <div class="field">
+                                        <label class="label">Grade</label>
+                                        <p>{{ student.grade.name }}</p>
+                                    </div>
+                                    <div class="field">
+                                        <label class="label">Class</label>
+                                        <p>{{ student.classroom.name }}</p>
+                                    </div>
+                                    <div class="field">
+                                        <label class="label">Admission Date</label>
+                                        <p>{{ student.admission_date }}</p>
+                                    </div>
+                                    
+                                    <div class="buttons is-centered mt-4">
+                                        <a href="{% url 'student_detail' student.pk %}" class="button is-info">
+                                            <span class="icon">
+                                                <i class="fas fa-eye"></i>
+                                            </span>
+                                            <span>View Details</span>
+                                        </a>
+                                        <a href="{% url 'student_update' student.pk %}" class="button is-warning">
+                                            <span class="icon">
+                                                <i class="fas fa-edit"></i>
+                                            </span>
+                                            <span>Edit</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="notification is-info is-light">
+                <div class="has-text-centered">
+                    <p class="subtitle is-4 mb-4">You haven't registered any students yet.</p>
+                    <p class="mb-5">Start managing your children's education by registering them as students.</p>
+                    <a href="{% url 'student_create' %}" class="button is-primary is-large">
+                        <span class="icon">
+                            <i class="fas fa-user-plus"></i>
+                        </span>
+                        <span>Register Your First Student</span>
+                    </a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    {% block extra_js %}
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Delete notification functionality
+            (document.querySelectorAll('.notification .delete') || []).forEach(($delete) => {
+                const $notification = $delete.parentNode;
+                $delete.addEventListener('click', () => {
+                    $notification.parentNode.removeChild($notification);
+                });
+            });
+        });
+    </script>
+    {% endblock %}
+{% endblock %} 

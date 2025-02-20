@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+
+{% block page_title %}Settings{% endblock %}
+
+{% block main_content %}
+<div class="container">
+    {% if messages %}
+    {% for message in messages %}
+    <div class="notification {% if message.tags %}is-{{ message.tags }}{% endif %}">
+        {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    <div class="columns">
+        <div class="column is-3">
+            <aside class="menu">
+                <p class="menu-label">
+                    Account Settings
+                </p>
+                <ul class="menu-list">
+                    <li><a href="#account" class="is-active">Account Information</a></li>
+                    <li><a href="#notifications">Notification Preferences</a></li>
+                    <li><a href="#privacy">Privacy Settings</a></li>
+                    <li><a href="#security">Security</a></li>
+                </ul>
+            </aside>
+        </div>
+
+        <div class="column is-9">
+            <div class="box">
+                <section id="account" class="mb-6">
+                    <h2 class="title is-4">Account Information</h2>
+                    <div class="field">
+                        <label class="label">Email Address</label>
+                        <div class="control">
+                            <input class="input" type="email" value="{{ user.email }}" readonly>
+                        </div>
+                        <p class="help">Contact administrator to change your email address</p>
+                    </div>
+
+                    <div class="field">
+                        <label class="label">User Type</label>
+                        <div class="control">
+                            <input class="input" type="text" value="{{ user.get_user_type_display }}" readonly>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="label">School</label>
+                        <div class="control">
+                            <input class="input" type="text" value="{{ user.school.name|default:'Not assigned' }}" readonly>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="notifications" class="mb-6">
+                    <h2 class="title is-4">Notification Preferences</h2>
+                    <div class="field">
+                        <label class="checkbox">
+                            <input type="checkbox" checked>
+                            Email notifications for new assignments
+                        </label>
+                    </div>
+                    <div class="field">
+                        <label class="checkbox">
+                            <input type="checkbox" checked>
+                            Email notifications for new messages
+                        </label>
+                    </div>
+                    <div class="field">
+                        <label class="checkbox">
+                            <input type="checkbox" checked>
+                            Email notifications for announcements
+                        </label>
+                    </div>
+                </section>
+
+                <section id="privacy" class="mb-6">
+                    <h2 class="title is-4">Privacy Settings</h2>
+                    <div class="field">
+                        <label class="checkbox">
+                            <input type="checkbox" checked>
+                            Show my profile picture to other users
+                        </label>
+                    </div>
+                    <div class="field">
+                        <label class="checkbox">
+                            <input type="checkbox" checked>
+                            Show my online status
+                        </label>
+                    </div>
+                </section>
+
+                <section id="security" class="mb-6">
+                    <h2 class="title is-4">Security</h2>
+                    <div class="field">
+                        <div class="control">
+                            <a href="{% url 'password_reset' %}" class="button is-primary">
+                                <span class="icon"><i class="fas fa-key"></i></span>
+                                <span>Change Password</span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="control">
+                            <button class="button is-warning">
+                                <span class="icon"><i class="fas fa-shield-alt"></i></span>
+                                <span>Enable Two-Factor Authentication</span>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="field is-grouped mt-6">
+                    <div class="control">
+                        <button type="submit" class="button is-primary">
+                            <span class="icon"><i class="fas fa-save"></i></span>
+                            <span>Save Changes</span>
+                        </button>
+                    </div>
+                    <div class="control">
+                        <button type="reset" class="button is-light">
+                            <span class="icon"><i class="fas fa-undo"></i></span>
+                            <span>Reset</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .menu {
+        position: sticky;
+        top: 20px;
+    }
+    .field:not(:last-child) {
+        margin-bottom: 1rem;
+    }
+    section:not(:last-child) {
+        border-bottom: 1px solid #dbdbdb;
+        padding-bottom: 2rem;
+    }
+</style>
+{% endblock %} 

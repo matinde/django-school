@@ -1,0 +1,48 @@
+<div class="level-item">
+    <div class="field has-addons">
+        <p class="control">
+            <input class="input search-box" type="text" placeholder="Search...">
+        </p>
+        <p class="control">
+            <button class="button is-primary">
+                <span class="icon">
+                    <i class="fas fa-search"></i>
+                </span>
+            </button>
+        </p>
+    </div>
+</div>
+
+<div class="level-item">
+    <div class="dropdown is-right">
+        <div class="dropdown-trigger">
+            <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+                <span class="icon">
+                    <i class="fas fa-user-circle"></i>
+                </span>
+                <span>{{ user.get_full_name }}</span>
+                <span class="icon">
+                    <i class="fas fa-angle-down"></i>
+                </span>
+            </button>
+        </div>
+
+        <div class="dropdown-menu" id="dropdown-menu" role="menu">
+            <div class="dropdown-content">
+                <a href="{% url 'profile' %}" class="dropdown-item">
+                    <span class="icon"><i class="fas fa-user"></i></span>
+                    <span>Profile</span>
+                </a>
+                <a href="{% url 'settings' %}" class="dropdown-item">
+                    <span class="icon"><i class="fas fa-cog"></i></span>
+                    <span>Settings</span>
+                </a>
+                <hr class="dropdown-divider">
+                <a href="{% url 'logout' %}" class="dropdown-item has-text-danger">
+                    <span class="icon"><i class="fas fa-sign-out-alt"></i></span>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div> 

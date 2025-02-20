@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ child.user.get_full_name }} - Details{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="notification {% if message.tags %}is-{{ message.tags }}{% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        <div class="columns">
+            <!-- Student Information -->
+            <div class="column is-4">
+                <div class="card">
+                    <div class="card-content">
+                        <div class="media">
+                            {% if child.photo %}
+                            <div class="media-left">
+                                <figure class="image is-128x128">
+                                    <img src="{{ child.photo.url }}" alt="{{ child.user.get_full_name }}" class="is-rounded">
+                                </figure>
+                            </div>
+                            {% endif %}
+                            <div class="media-content">
+                                <p class="title is-4">{{ child.user.get_full_name }}</p>
+                                <p class="subtitle is-6">Registration #: {{ child.registration_number }}</p>
+                            </div>
+                        </div>
+
+                        <div class="content">
+                            <p><strong>Grade:</strong> {{ child.grade.name }}</p>
+                            <p><strong>Class:</strong> {{ child.classroom.name }}</p>
+                            <p><strong>Admission Date:</strong> {{ child.admission_date }}</p>
+                            <p><strong>Date of Birth:</strong> {{ child.date_of_birth }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Subjects and Teachers -->
+            <div class="column is-8">
+                <div class="card">
+                    <header class="card-header">
+                        <p class="card-header-title">
+                            <span class="icon mr-2">
+                                <i class="fas fa-book"></i>
+                            </span>
+                            Subjects and Teachers
+                        </p>
+                    </header>
+                    <div class="card-content">
+                        <div class="content">
+                            {% if subjects %}
+                            <table class="table is-fullwidth">
+                                <thead>
+                                    <tr>
+                                        <th>Subject</th>
+                                        <th>Teacher</th>
+                                        <th>Duration</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for subject in subjects %}
+                                    <tr>
+                                        <td>{{ subject.name }}</td>
+                                        <td>{{ subject.teacher.user.get_full_name }}</td>
+                                        <td>{{ subject.duration }} hours</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            {% else %}
+                            <p class="has-text-centered">No subjects assigned yet.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Assignments -->
+                <div class="card mt-4">
+                    <header class="card-header">
+                        <p class="card-header-title">
+                            <span class="icon mr-2">
+                                <i class="fas fa-tasks"></i>
+                            </span>
+                            Recent Assignments
+                        </p>
+                    </header>
+                    <div class="card-content">
+                        <div class="content">
+                            {% if assignments %}
+                            <table class="table is-fullwidth">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Subject</th>
+                                        <th>Due Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for assignment in assignments %}
+                                    <tr>
+                                        <td>{{ assignment.title }}</td>
+                                        <td>{{ assignment.subject.name }}</td>
+                                        <td>{{ assignment.due_date }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            {% else %}
+                            <p class="has-text-centered">No recent assignments.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Announcements -->
+                <div class="card mt-4">
+                    <header class="card-header">
+                        <p class="card-header-title">
+                            <span class="icon mr-2">
+                                <i class="fas fa-bullhorn"></i>
+                            </span>
+                            Recent Announcements
+                        </p>
+                    </header>
+                    <div class="card-content">
+                        <div class="content">
+                            {% if announcements %}
+                            {% for announcement in announcements %}
+                            <article class="message">
+                                <div class="message-header">
+                                    <p>{{ announcement.title }}</p>
+                                    <p class="is-size-7">{{ announcement.date }}</p>
+                                </div>
+                                <div class="message-body">
+                                    {{ announcement.description }}
+                                </div>
+                            </article>
+                            {% endfor %}
+                            {% else %}
+                            <p class="has-text-centered">No recent announcements.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %} 

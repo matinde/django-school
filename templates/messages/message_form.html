@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block page_title %}New Message{% endblock %}
+
+{% block main_content %}
+<div class="container">
+    {% if messages %}
+    {% for message in messages %}
+    <div class="notification {% if message.tags %}is-{{ message.tags }}{% endif %}">
+        {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    <div class="box">
+        <h1 class="title">New Message</h1>
+
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="field">
+                <label class="label">To</label>
+                <div class="control">
+                    <div class="select is-fullwidth">
+                        {{ form.recipient }}
+                    </div>
+                </div>
+                {% if form.recipient.errors %}
+                <p class="help is-danger">{{ form.recipient.errors|join:", " }}</p>
+                {% endif %}
+            </div>
+
+            <div class="field">
+                <label class="label">Subject</label>
+                <div class="control">
+                    {{ form.subject }}
+                </div>
+                {% if form.subject.errors %}
+                <p class="help is-danger">{{ form.subject.errors|join:", " }}</p>
+                {% endif %}
+            </div>
+
+            <div class="field">
+                <label class="label">Message</label>
+                <div class="control">
+                    {{ form.content }}
+                </div>
+                {% if form.content.errors %}
+                <p class="help is-danger">{{ form.content.errors|join:", " }}</p>
+                {% endif %}
+            </div>
+
+            <div class="field is-grouped mt-5">
+                <div class="control">
+                    <button type="submit" class="button is-primary">
+                        <span class="icon"><i class="fas fa-paper-plane"></i></span>
+                        <span>Send Message</span>
+                    </button>
+                </div>
+                <div class="control">
+                    <a href="{% url 'messages' %}" class="button is-light">
+                        <span class="icon"><i class="fas fa-times"></i></span>
+                        <span>Cancel</span>
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .select, .input, .textarea {
+        width: 100%;
+    }
+    .textarea {
+        min-height: 200px;
+    }
+</style>
+{% endblock %} 

@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+
+{% block page_title %}{% if object %}Edit{% else %}Create{% endif %} Assignment{% endblock %}
+
+{% block main_content %}
+<div class="container">
+    {% if messages %}
+    {% for message in messages %}
+    <div class="notification {% if message.tags %}is-{{ message.tags }}{% endif %}">
+        {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    <div class="box">
+        <h1 class="title">{% if object %}Edit{% else %}Create{% endif %} Assignment</h1>
+        
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="field">
+                <label class="label">Title</label>
+                <div class="control">
+                    {{ form.title }}
+                </div>
+                {% if form.title.errors %}
+                <p class="help is-danger">{{ form.title.errors|join:", " }}</p>
+                {% endif %}
+            </div>
+
+            <div class="field">
+                <label class="label">Description</label>
+                <div class="control">
+                    {{ form.description }}
+                </div>
+                {% if form.description.errors %}
+                <p class="help is-danger">{{ form.description.errors|join:", " }}</p>
+                {% endif %}
+            </div>
+
+            <div class="columns">
+                <div class="column">
+                    <div class="field">
+                        <label class="label">Subject</label>
+                        <div class="control">
+                            <div class="select is-fullwidth">
+                                {{ form.subject }}
+                            </div>
+                        </div>
+                        {% if form.subject.errors %}
+                        <p class="help is-danger">{{ form.subject.errors|join:", " }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="column">
+                    <div class="field">
+                        <label class="label">Grade</label>
+                        <div class="control">
+                            <div class="select is-fullwidth">
+                                {{ form.grade }}
+                            </div>
+                        </div>
+                        {% if form.grade.errors %}
+                        <p class="help is-danger">{{ form.grade.errors|join:", " }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="column">
+                    <div class="field">
+                        <label class="label">Classroom</label>
+                        <div class="control">
+                            <div class="select is-fullwidth">
+                                {{ form.classroom }}
+                            </div>
+                        </div>
+                        {% if form.classroom.errors %}
+                        <p class="help is-danger">{{ form.classroom.errors|join:", " }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">Due Date</label>
+                <div class="control">
+                    {{ form.due_date }}
+                </div>
+                {% if form.due_date.errors %}
+                <p class="help is-danger">{{ form.due_date.errors|join:", " }}</p>
+                {% endif %}
+            </div>
+
+            <div class="field is-grouped mt-5">
+                <div class="control">
+                    <button type="submit" class="button is-primary">
+                        {% if object %}Update{% else %}Create{% endif %} Assignment
+                    </button>
+                </div>
+                <div class="control">
+                    <a href="{% url 'assignments' %}" class="button is-light">Cancel</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .select, .input, .textarea {
+        width: 100%;
+    }
+    .textarea {
+        min-height: 120px;
+    }
+</style>
+{% endblock %} 

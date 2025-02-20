@@ -1,0 +1,200 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{% if request.resolver_match.kwargs.user_type == 'teacher' %}
+Teacher Registration
+{% else %}
+Parent Registration
+{% endif %}
+- Django School
+{% endblock %}
+
+{% block auth_content %}
+<section class="hero is-fullheight">
+    <div class="hero-body">
+        <div class="container">
+            <div class="columns is-centered">
+                <div class="column is-6">
+                    <div class="box">
+                        <!-- Logo and Title -->
+                        <div class="has-text-centered mb-6">
+                            <span class="icon is-large has-text-primary">
+                                <i class="fas fa-graduation-cap fa-3x"></i>
+                            </span>
+                            <h1 class="title is-4 mt-2">Django School</h1>
+                            <h2 class="subtitle is-6">
+                                {% if request.resolver_match.kwargs.user_type == 'teacher' %}
+                                Teacher Registration
+                                {% else %}
+                                Parent Registration
+                                {% endif %}
+                            </h2>
+                        </div>
+
+                        {% if messages %}
+                        {% for message in messages %}
+                        <div class="notification {% if message.tags %}is-{{ message.tags }}{% endif %} is-light">
+                            <button class="delete"></button>
+                            {{ message }}
+                        </div>
+                        {% endfor %}
+                        {% endif %}
+
+                        <form method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            
+                            <div class="field">
+                                <label class="label">First Name</label>
+                                <div class="control">
+                                    {{ form.first_name }}
+                                </div>
+                                {% if form.first_name.errors %}
+                                <p class="help is-danger">{{ form.first_name.errors|join:", " }}</p>
+                                {% endif %}
+                            </div>
+
+                            <div class="field">
+                                <label class="label">Last Name</label>
+                                <div class="control">
+                                    {{ form.last_name }}
+                                </div>
+                                {% if form.last_name.errors %}
+                                <p class="help is-danger">{{ form.last_name.errors|join:", " }}</p>
+                                {% endif %}
+                            </div>
+
+                            <div class="field">
+                                <label class="label">Email</label>
+                                <div class="control">
+                                    {{ form.email }}
+                                </div>
+                                {% if form.email.errors %}
+                                <p class="help is-danger">{{ form.email.errors|join:", " }}</p>
+                                {% endif %}
+                            </div>
+
+                            <div class="field">
+                                <label class="label">Password</label>
+                                <div class="control">
+                                    {{ form.password1 }}
+                                </div>
+                                {% if form.password1.errors %}
+                                <p class="help is-danger">{{ form.password1.errors|join:", " }}</p>
+                                {% endif %}
+                            </div>
+
+                            <div class="field">
+                                <label class="label">Confirm Password</label>
+                                <div class="control">
+                                    {{ form.password2 }}
+                                </div>
+                                {% if form.password2.errors %}
+                                <p class="help is-danger">{{ form.password2.errors|join:", " }}</p>
+                                {% endif %}
+                            </div>
+
+                            {% if request.resolver_match.kwargs.user_type == 'parent' %}
+                            <div class="field">
+                                <label class="label">Phone Number</label>
+                                <div class="control">
+                                    {{ form.phone_number }}
+                                </div>
+                                {% if form.phone_number.errors %}
+                                <p class="help is-danger">{{ form.phone_number.errors|join:", " }}</p>
+                                {% endif %}
+                            </div>
+
+                            <div class="field">
+                                <label class="label">Address</label>
+                                <div class="control">
+                                    {{ form.address }}
+                                </div>
+                                {% if form.address.errors %}
+                                <p class="help is-danger">{{ form.address.errors|join:", " }}</p>
+                                {% endif %}
+                            </div>
+
+                            <div class="field">
+                                <label class="label">Identification Number</label>
+                                <div class="control">
+                                    {{ form.identification_number }}
+                                </div>
+                                {% if form.identification_number.errors %}
+                                <p class="help is-danger">{{ form.identification_number.errors|join:", " }}</p>
+                                {% endif %}
+                            </div>
+                            {% endif %}
+
+                            {% if request.resolver_match.kwargs.user_type == 'teacher' %}
+                            <div class="field">
+                                <label class="label">Gender</label>
+                                <div class="control">
+                                    <div class="select is-fullwidth">
+                                        {{ form.gender }}
+                                    </div>
+                                </div>
+                                {% if form.gender.errors %}
+                                <p class="help is-danger">{{ form.gender.errors|join:", " }}</p>
+                                {% endif %}
+                            </div>
+
+                            <div class="field">
+                                <label class="label">Department</label>
+                                <div class="control">
+                                    <div class="select is-fullwidth">
+                                        {{ form.department }}
+                                    </div>
+                                </div>
+                                {% if form.department.errors %}
+                                <p class="help is-danger">{{ form.department.errors|join:", " }}</p>
+                                {% endif %}
+                            </div>
+
+                            <div class="field">
+                                <label class="label">Bio</label>
+                                <div class="control">
+                                    {{ form.bio }}
+                                </div>
+                                {% if form.bio.errors %}
+                                <p class="help is-danger">{{ form.bio.errors|join:", " }}</p>
+                                {% endif %}
+                                <p class="help">Tell us about your teaching experience and qualifications</p>
+                            </div>
+                            {% endif %}
+
+                            <div class="field mt-5">
+                                <div class="control">
+                                    <button type="submit" class="button is-primary is-fullwidth">
+                                        <span class="icon">
+                                            <i class="fas fa-user-plus"></i>
+                                        </span>
+                                        <span>Register</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="has-text-centered mt-4">
+                                <p>Already have an account? <a href="{% url 'login' %}" class="has-text-primary">Login here</a></p>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Delete notification
+    (document.querySelectorAll('.notification .delete') || []).forEach(($delete) => {
+        const $notification = $delete.parentNode;
+        $delete.addEventListener('click', () => {
+            $notification.parentNode.removeChild($notification);
+        });
+    });
+});
+</script>
+{% endblock %} 

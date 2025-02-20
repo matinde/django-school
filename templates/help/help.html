@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+
+{% block page_title %}Help & Support{% endblock %}
+
+{% block main_content %}
+<div class="container">
+    <div class="box">
+        <h1 class="title">Help & Support</h1>
+        
+        <div class="content">
+            <div class="columns">
+                <div class="column is-3">
+                    <aside class="menu">
+                        <p class="menu-label">
+                            Quick Links
+                        </p>
+                        <ul class="menu-list">
+                            <li><a href="#getting-started">Getting Started</a></li>
+                            <li><a href="#faq">Frequently Asked Questions</a></li>
+                            <li><a href="#contact-support">Contact Support</a></li>
+                        </ul>
+                    </aside>
+                </div>
+
+                <div class="column is-9">
+                    <section id="getting-started" class="mb-6">
+                        <h2 class="title is-4">Getting Started</h2>
+                        <div class="box">
+                            <h3 class="title is-5">Welcome to the School Management System</h3>
+                            <p>Here's how to get started with the basic features:</p>
+                            
+                            <div class="content">
+                                <h4 class="title is-6">For Teachers:</h4>
+                                <ul>
+                                    <li>View your assigned classes and students</li>
+                                    <li>Create and manage assignments</li>
+                                    <li>Communicate with parents</li>
+                                    <li>Track student progress</li>
+                                </ul>
+
+                                <h4 class="title is-6">For Students:</h4>
+                                <ul>
+                                    <li>View your class schedule</li>
+                                    <li>Access assignments and study materials</li>
+                                    <li>Submit completed work</li>
+                                    <li>Track your grades</li>
+                                </ul>
+
+                                <h4 class="title is-6">For Parents:</h4>
+                                <ul>
+                                    <li>Monitor your children's progress</li>
+                                    <li>Communicate with teachers</li>
+                                    <li>View upcoming assignments</li>
+                                    <li>Access school announcements</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="faq" class="mb-6">
+                        <h2 class="title is-4">Frequently Asked Questions</h2>
+                        <div class="box">
+                            <div class="content">
+                                <h4 class="title is-5">How do I reset my password?</h4>
+                                <p>Click on the "Forgot Password" link on the login page and follow the instructions sent to your email.</p>
+
+                                <h4 class="title is-5">How do I update my profile information?</h4>
+                                <p>Go to your profile page by clicking on your name in the top menu, then click "Edit Profile".</p>
+
+                                <h4 class="title is-5">How do I contact a teacher?</h4>
+                                <p>Use the messaging system to send a direct message to any teacher in your or your child's class.</p>
+
+                                <h4 class="title is-5">Where can I find my assignments?</h4>
+                                <p>Click on "Assignments" in the main menu to view all your current and past assignments.</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="contact-support" class="mb-6">
+                        <h2 class="title is-4">Contact Support</h2>
+                        <div class="box">
+                            <div class="content">
+                                <p>If you need additional help, you can reach our support team through:</p>
+                                <ul>
+                                    <li>Email: support@schoolsystem.com</li>
+                                    <li>Phone: (555) 123-4567</li>
+                                    <li>Hours: Monday - Friday, 8:00 AM - 5:00 PM</li>
+                                </ul>
+                                
+                                <div class="notification is-info is-light">
+                                    <p>For urgent matters outside of business hours, please contact your school administrator directly.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .menu {
+        position: sticky;
+        top: 20px;
+    }
+    .content section:not(:last-child) {
+        margin-bottom: 2rem;
+    }
+</style>
+{% endblock %} 

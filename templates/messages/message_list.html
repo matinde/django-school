@@ -1,0 +1,194 @@
+{% extends 'base.html' %}
+
+{% block page_title %}Messages{% endblock %}
+
+{% block main_content %}
+<div class="container">
+    {% if messages %}
+    {% for message in messages %}
+    <div class="notification {% if message.tags %}is-{{ message.tags }}{% endif %}">
+        {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    <div class="level mb-6">
+        <div class="level-left">
+            <div class="level-item">
+                <h1 class="title">Messages</h1>
+                {% if unread_count %}
+                <span class="tag is-danger ml-2">{{ unread_count }} Unread</span>
+                {% endif %}
+            </div>
+        </div>
+        <div class="level-right">
+            <div class="level-item">
+                <a href="{% url 'message_create' %}" class="button is-primary">
+                    <span class="icon"><i class="fas fa-paper-plane"></i></span>
+                    <span>New Message</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="box">
+        <div class="tabs">
+            <ul>
+                <li class="is-active"><a href="#inbox" data-tab="inbox">Inbox</a></li>
+                <li><a href="#sent" data-tab="sent">Sent</a></li>
+            </ul>
+        </div>
+
+        <div id="inbox" class="tab-content is-active">
+            {% for message in object_list %}
+            {% if message.recipient == user %}
+            <div class="message-item box {% if not message.read %}has-background-light{% endif %}">
+                <div class="level">
+                    <div class="level-left">
+                        <div class="level-item">
+                            <div>
+                                <p class="title is-5 mb-1">
+                                    {% if not message.read %}
+                                    <span class="icon has-text-info"><i class="fas fa-circle fa-xs"></i></span>
+                                    {% endif %}
+                                    {{ message.subject }}
+                                </p>
+                                <p class="subtitle is-6">From: {{ message.sender.get_full_name }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="level-right">
+                        <div class="level-item">
+                            <div class="buttons">
+                                <a href="{% url 'message_detail' message.pk %}" class="button is-info is-small">
+                                    <span class="icon"><i class="fas fa-eye"></i></span>
+                                    <span>View</span>
+                                </a>
+                                <a href="{% url 'message_reply' message.pk %}" class="button is-primary is-small">
+                                    <span class="icon"><i class="fas fa-reply"></i></span>
+                                    <span>Reply</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p class="has-text-grey is-size-7">{{ message.created_at|date:"F j, Y, g:i a" }}</p>
+            </div>
+            {% endif %}
+            {% empty %}
+            <div class="notification is-info is-light">
+                <p class="has-text-centered">No messages in your inbox.</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div id="sent" class="tab-content" style="display: none;">
+            {% for message in object_list %}
+            {% if message.sender == user %}
+            <div class="message-item box">
+                <div class="level">
+                    <div class="level-left">
+                        <div class="level-item">
+                            <div>
+                                <p class="title is-5 mb-1">{{ message.subject }}</p>
+                                <p class="subtitle is-6">To: {{ message.recipient.get_full_name }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="level-right">
+                        <div class="level-item">
+                            <a href="{% url 'message_detail' message.pk %}" class="button is-info is-small">
+                                <span class="icon"><i class="fas fa-eye"></i></span>
+                                <span>View</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <p class="has-text-grey is-size-7">{{ message.created_at|date:"F j, Y, g:i a" }}</p>
+            </div>
+            {% endif %}
+            {% empty %}
+            <div class="notification is-info is-light">
+                <p class="has-text-centered">No sent messages.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    {% if is_paginated %}
+    <nav class="pagination is-centered mt-6" role="navigation" aria-label="pagination">
+        {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}" class="pagination-previous">Previous</a>
+        {% else %}
+        <a class="pagination-previous" disabled>Previous</a>
+        {% endif %}
+
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}" class="pagination-next">Next</a>
+        {% else %}
+        <a class="pagination-next" disabled>Next</a>
+        {% endif %}
+
+        <ul class="pagination-list">
+            {% for i in paginator.page_range %}
+            <li>
+                <a href="?page={{ i }}" class="pagination-link {% if page_obj.number == i %}is-current{% endif %}" 
+                   aria-label="Page {{ i }}" aria-current="{% if page_obj.number == i %}page{% endif %}">
+                    {{ i }}
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .message-item {
+        transition: all 0.3s ease;
+        margin-bottom: 1rem;
+    }
+    .message-item:hover {
+        transform: translateX(5px);
+    }
+    .tab-content {
+        display: none;
+    }
+    .tab-content.is-active {
+        display: block;
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Tab switching functionality
+    const tabs = document.querySelectorAll('.tabs li');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            // Remove active class from all tabs
+            tabs.forEach(t => t.classList.remove('is-active'));
+            // Add active class to clicked tab
+            tab.classList.add('is-active');
+
+            // Hide all tab contents
+            tabContents.forEach(content => {
+                content.style.display = 'none';
+                content.classList.remove('is-active');
+            });
+
+            // Show selected tab content
+            const targetId = tab.querySelector('a').getAttribute('data-tab');
+            const targetContent = document.getElementById(targetId);
+            targetContent.style.display = 'block';
+            targetContent.classList.add('is-active');
+        });
+    });
+});
+</script>
+{% endblock %} 

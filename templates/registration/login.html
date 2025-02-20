@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}Login - Django School{% endblock %}
+
+{% block auth_content %}
+<section class="hero is-fullheight">
+    <div class="hero-body">
+        <div class="container">
+            <div class="columns is-centered">
+                <div class="column is-4">
+                    <div class="box">
+                        <!-- Logo and Title -->
+                        <div class="has-text-centered mb-6">
+                            <span class="icon is-large has-text-primary">
+                                <i class="fas fa-graduation-cap fa-3x"></i>
+                            </span>
+                            <h1 class="title is-4 mt-2">Django School</h1>
+                            <h2 class="subtitle is-6">Sign in to your account</h2>
+                        </div>
+
+                        <!-- Login Form -->
+                        <form method="post" action="{% url 'login' %}">
+                            {% csrf_token %}
+                            
+                            {% if form.errors %}
+                            <div class="notification is-danger is-light">
+                                <button class="delete"></button>
+                                Your email or password is incorrect. Please try again.
+                            </div>
+                            {% endif %}
+
+                            <div class="field">
+                                <label class="label">Email</label>
+                                <div class="control has-icons-left">
+                                    <input class="input" type="email" name="username" placeholder="Enter your email" required>
+                                    <span class="icon is-small is-left">
+                                        <i class="fas fa-envelope"></i>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <label class="label">Password</label>
+                                <div class="control has-icons-left">
+                                    <input class="input" type="password" name="password" placeholder="Enter your password" required>
+                                    <span class="icon is-small is-left">
+                                        <i class="fas fa-lock"></i>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <div class="control">
+                                    <button type="submit" class="button is-primary is-fullwidth">
+                                        <span class="icon">
+                                            <i class="fas fa-sign-in-alt"></i>
+                                        </span>
+                                        <span>Login</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="has-text-centered mt-5">
+                                <p class="mb-3">
+                                    <a href="{% url 'password_reset' %}" class="has-text-primary">Forgot Password?</a>
+                                </p>
+                                <p class="is-size-7">
+                                    Don't have an account? Register as:
+                                </p>
+                                <div class="buttons is-centered mt-2">
+                                    <a href="{% url 'register' user_type='teacher' %}" class="button is-light is-small">
+                                        <span class="icon">
+                                            <i class="fas fa-chalkboard-teacher"></i>
+                                        </span>
+                                        <span>Teacher</span>
+                                    </a>
+                                    <a href="{% url 'register' user_type='parent' %}" class="button is-light is-small">
+                                        <span class="icon">
+                                            <i class="fas fa-users"></i>
+                                        </span>
+                                        <span>Parent</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Delete notification
+    (document.querySelectorAll('.notification .delete') || []).forEach(($delete) => {
+        const $notification = $delete.parentNode;
+        $delete.addEventListener('click', () => {
+            $notification.parentNode.removeChild($notification);
+        });
+    });
+});
+</script>
+{% endblock %} 

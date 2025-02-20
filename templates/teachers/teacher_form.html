@@ -1,61 +1,89 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    
-    <form method="post">
-        {% csrf_token %}
-        <div class="column box is-6 is-centered">
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="notification">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            {% endif %}
-        <div class="is-small field">
-          <div class="label">First Name</div>
-          {{ form.first_name }}
+<section class="section">
+    <div class="container">
+        <h1 class="title">{% if object %}Edit{% else %}Add{% endif %} Teacher</h1>
+        
+        {% if messages %}
+        {% for message in messages %}
+        <div class="notification {% if message.tags %}is-{{ message.tags }}{% endif %}">
+            {{ message }}
         </div>
-        <div class="is-small field">
-          <div class="label">Last Name</div>
-          {{ form.last_name }}
-        </div>
-        <div class="is-small field">
-          <div class="label">Status</div>
-          {{ form.current_status }}
-        </div>
-        <div class=" field">
-          <div class="label">Email</div>
-          {{ form.email }}
-        </div>
-        <div class=" field">
-          <div class="label">Phone Numbers</div>
-          {{ form.phone_numbers }}
-        </div>
-      
-        <div class=" field">
-          <div class="label">Photo</div>
-          {{ form.photo }}
-        </div>
-        <div class=" field">
-          <div class="label">School</div>
-          {{ form.school }}
-        </div>
-        <div class=" field">
-          <div class="label">Gender</div>
-          {{ form.gender }}
-        </div>
-      
-        <div class=" field">
-            <div class="label">Department</div>
-            {{ form.department }}
-          </div>
+        {% endfor %}
+        {% endif %}
 
-    
+        <div class="box">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div class="field">
+                    <label class="label">First Name</label>
+                    <div class="control">
+                        {{ form.first_name }}
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">Last Name</label>
+                    <div class="control">
+                        {{ form.last_name }}
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">Email</label>
+                    <div class="control">
+                        {{ form.email }}
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">Phone Number</label>
+                    <div class="control">
+                        {{ form.phone_number }}
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">Gender</label>
+                    <div class="control">
+                        {{ form.gender }}
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">Department</label>
+                    <div class="control">
+                        {{ form.department }}
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">Photo</label>
+                    <div class="control">
+                        {{ form.photo }}
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">Status</label>
+                    <div class="control">
+                        {{ form.current_status }}
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="control">
+                        <button type="submit" class="button is-primary">
+                            {% if object %}Update{% else %}Create{% endif %} Teacher
+                        </button>
+                    </div>
+                </div>
+            </form>
         </div>
-        <input type="submit" value="Submit" class="button is-primary">
     </div>
-    </form>
+</section>
 {% endblock %}
 
 ["first_name", "last_name", "current_status", "registration_number", 

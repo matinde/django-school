@@ -38,7 +38,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-
+AUTH_USER_MODEL = 'django_school.User'
 # Application definition
 
 INSTALLED_APPS = [
@@ -93,8 +93,18 @@ DATABASES = {
         "PASSWORD": os.environ.get("POSTGRES_PASSWORD", "postgres"),
         "HOST": os.environ.get("POSTGRES_HOST", "db"),
         "PORT": os.environ.get("POSTGRES_PORT", "5432"),
+        # Connection handling parameters
+        "CONN_MAX_AGE": 0,  # Close connections at the end of each request
+        "OPTIONS": {
+            "connect_timeout": 10,
+            "client_encoding": 'UTF8'
+        },
+        "ATOMIC_REQUESTS": True,  # Wrap each request in a transaction
     }
 }
+
+# Connection and request handling
+CONN_HEALTH_CHECKS = True
 
 
 # Password validation
@@ -137,3 +147,21 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# Custom User Model
+AUTH_USER_MODEL = 'django_school.user'
+
+# Authentication Settings
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'login'
+
+# Email settings (for password reset and registration)
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # For development
+# Configure your email settings for production
+
+# Authentication Backends
+AUTHENTICATION_BACKENDS = [
+    'django_school.auth.CustomAuthBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]

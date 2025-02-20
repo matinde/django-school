@@ -1,57 +1,149 @@
 <!-- students.html -->
 {% extends 'base.html' %}
 
-{% block content %}
+{% block page_title %}Students{% endblock %}
 
-<section class="">
-<h1 class="title">Students</h1>
-
-<nav class="level mr-4">
-    <div class="column is-5 level-left">
-        <input type="text" class=" input level-item" placeholder="Search for names ...">
+{% block main_content %}
+<div class="container">
+    {% if messages %}
+    {% for message in messages %}
+    <div class="notification {% if message.tags %}is-{{ message.tags }}{% endif %}">
+        {{ message }}
     </div>
-    <div class="level-right">
-       <a href="{% url 'student_create' %}" class="button is-primary level-item">Create new student</a>            
-</nav>
-    <table class="table is-fullwidth">
-        <tr>
-            <th>First Name</t}h>
-            <th>Grade</th>
-            <th>Classroom</th>
-            <th>Admission Date</th>
-            <th>Student Number</th>
-            <th>Status</th>
-        </tr>
-        {% for s in students %}
-        <tr>
-            <td><a href="{% url 'student_detail' s.uid %}"> {{s.first_name }} {{ s.last_name }}</a></td>
-            <td>{{ s.grade }}</td>
-            <td>{{ s.classroom }}</td>
-            <td>{{ s.admission_date }}</td>
-            <td>{{ s.registration_number }}</td>
-            <td>{{ s.current_status }}</td>
-        </tr>
-        
-        {% endfor %}
-    </table>
-
-    {% if page_obj.has_previous %}
-    <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
-    {% endif %}
-
-    {% for page in paginator.page_range %}
-    {% if page == page_obj.number %}
-        <strong>{{ page }}</strong>
-    {% else %}
-        <a href="?page={{ page }}">{{ page }}</a>
-    {% endif %}
     {% endfor %}
-
-    {% if page_obj.has_next %}
-    <a href="?page={{ page_obj.next_page_number }}">Next</a>
     {% endif %}
 
-  
+    <div class="level mb-6">
+        <div class="level-left">
+            <div class="level-item">
+                <h1 class="title">
+                    {% if user.user_type == 'teacher' %}My Students
+                    {% else %}All Students{% endif %}
+                </h1>
+            </div>
+        </div>
+        {% if user.user_type == 'admin' %}
+        <div class="level-right">
+            <div class="level-item">
+                <a href="{% url 'student_create' %}" class="button is-primary">
+                    <span class="icon"><i class="fas fa-plus"></i></span>
+                    <span>Add Student</span>
+                </a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
 
-</section>
+    {% if students %}
+    <div class="columns is-multiline">
+        {% for student in students %}
+        <div class="column is-4">
+            <div class="card">
+                <div class="card-content">
+                    <div class="media">
+                        <div class="media-left">
+                            {% if student.photo %}
+                            <figure class="image is-64x64">
+                                <img src="{{ student.photo.url }}" alt="Student photo" class="is-rounded">
+                            </figure>
+                            {% else %}
+                            <figure class="image is-64x64">
+                                <span class="icon is-large">
+                                    <i class="fas fa-user-graduate fa-3x"></i>
+                                </span>
+                            </figure>
+                            {% endif %}
+                        </div>
+                        <div class="media-content">
+                            <p class="title is-4">{{ student.user.get_full_name }}</p>
+                            <p class="subtitle is-6">
+                                <span class="tag is-info">{{ student.grade.name }}</span>
+                                <span class="tag is-success">{{ student.classroom.name }}</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="content">
+                        <p><strong>Registration:</strong> {{ student.registration_number }}</p>
+                        <p><strong>Admission Date:</strong> {{ student.admission_date }}</p>
+                        
+                        <div class="buttons mt-4">
+                            <a href="{% url 'student_detail' student.pk %}" class="button is-info is-small">
+                                <span class="icon"><i class="fas fa-eye"></i></span>
+                                <span>View Details</span>
+                            </a>
+                            {% if user.user_type == 'admin' %}
+                            <a href="{% url 'student_update' student.pk %}" class="button is-warning is-small">
+                                <span class="icon"><i class="fas fa-edit"></i></span>
+                                <span>Edit</span>
+                            </a>
+                            <a href="{% url 'student_delete' student.pk %}" class="button is-danger is-small">
+                                <span class="icon"><i class="fas fa-trash"></i></span>
+                                <span>Delete</span>
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% if is_paginated %}
+    <nav class="pagination is-centered mt-6" role="navigation" aria-label="pagination">
+        {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}" class="pagination-previous">Previous</a>
+        {% else %}
+        <a class="pagination-previous" disabled>Previous</a>
+        {% endif %}
+
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}" class="pagination-next">Next</a>
+        {% else %}
+        <a class="pagination-next" disabled>Next</a>
+        {% endif %}
+
+        <ul class="pagination-list">
+            {% for i in paginator.page_range %}
+            <li>
+                <a href="?page={{ i }}" class="pagination-link {% if page_obj.number == i %}is-current{% endif %}" 
+                   aria-label="Page {{ i }}" aria-current="{% if page_obj.number == i %}page{% endif %}">
+                    {{ i }}
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+    </nav>
+    {% endif %}
+
+    {% else %}
+    <div class="notification is-info is-light">
+        <p class="has-text-centered">No students found.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .card {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    .card-content {
+        flex-grow: 1;
+    }
+    .image.is-64x64 {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #f5f5f5;
+        border-radius: 50%;
+    }
+    .image.is-64x64 .icon {
+        color: #485fc7;
+    }
+</style>
 {% endblock %}

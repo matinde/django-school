@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+
+{% block page_title %}My Profile{% endblock %}
+
+{% block main_content %}
+<div class="container">
+    {% if messages %}
+    {% for message in messages %}
+    <div class="notification {% if message.tags %}is-{{ message.tags }}{% endif %}">
+        {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    <div class="columns">
+        <div class="column is-4">
+            <div class="card">
+                <div class="card-content">
+                    <div class="has-text-centered mb-4">
+                        {% if user.profile.profile_picture %}
+                        <figure class="image is-128x128 is-inline-block">
+                            <img class="is-rounded" src="{{ user.profile.profile_picture.url }}" alt="Profile picture">
+                        </figure>
+                        {% else %}
+                        <figure class="image is-128x128 is-inline-block">
+                            <span class="icon is-large">
+                                <i class="fas fa-user-circle fa-6x"></i>
+                            </span>
+                        </figure>
+                        {% endif %}
+                        <h2 class="title is-4 mt-2">{{ user.get_full_name }}</h2>
+                        <p class="subtitle is-6">{{ user.get_user_type_display }}</p>
+                    </div>
+
+                    <div class="content">
+                        <p><strong>Email:</strong> {{ user.email }}</p>
+                        <p><strong>Phone:</strong> {{ user.profile.phone_number|default:"Not provided" }}</p>
+                        <p><strong>School:</strong> {{ user.school.name|default:"Not assigned" }}</p>
+                        <p><strong>Member since:</strong> {{ user.date_joined|date:"F j, Y" }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="column is-8">
+            <div class="card">
+                <div class="card-header">
+                    <p class="card-header-title">
+                        <span class="icon mr-2"><i class="fas fa-edit"></i></span>
+                        Edit Profile
+                    </p>
+                </div>
+                <div class="card-content">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <div class="field">
+                            <label class="label">Phone Number</label>
+                            <div class="control">
+                                {{ form.phone_number }}
+                            </div>
+                            {% if form.phone_number.errors %}
+                            <p class="help is-danger">{{ form.phone_number.errors|join:", " }}</p>
+                            {% endif %}
+                        </div>
+
+                        <div class="field">
+                            <label class="label">Address</label>
+                            <div class="control">
+                                {{ form.address }}
+                            </div>
+                            {% if form.address.errors %}
+                            <p class="help is-danger">{{ form.address.errors|join:", " }}</p>
+                            {% endif %}
+                        </div>
+
+                        <div class="field">
+                            <label class="label">Bio</label>
+                            <div class="control">
+                                {{ form.bio }}
+                            </div>
+                            {% if form.bio.errors %}
+                            <p class="help is-danger">{{ form.bio.errors|join:", " }}</p>
+                            {% endif %}
+                        </div>
+
+                        <div class="field">
+                            <label class="label">Profile Picture</label>
+                            <div class="control">
+                                {{ form.profile_picture }}
+                            </div>
+                            {% if form.profile_picture.errors %}
+                            <p class="help is-danger">{{ form.profile_picture.errors|join:", " }}</p>
+                            {% endif %}
+                        </div>
+
+                        <div class="field">
+                            <div class="control">
+                                <button type="submit" class="button is-primary">
+                                    <span class="icon"><i class="fas fa-save"></i></span>
+                                    <span>Save Changes</span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .image.is-128x128 {
+        margin: 0 auto;
+    }
+    .textarea {
+        min-height: 120px;
+    }
+    .input, .textarea, .select {
+        width: 100%;
+    }
+</style>
+{% endblock %} 

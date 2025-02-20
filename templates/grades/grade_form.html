@@ -1,29 +1,73 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    
-    <form method="post">
-        {% csrf_token %}
-        <div class="column box is-6 is-centered">
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="notification">
+<section class="section">
+    <div class="container">
+        <div class="columns is-centered">
+            <div class="column is-8">
+                <div class="box">
+                    <h1 class="title has-text-centered">Create Grade</h1>
+                    <p class="subtitle has-text-centered">Set up your school's grade structure</p>
+
+                    {% if messages %}
+                    {% for message in messages %}
+                    <div class="notification {% if message.tags %}is-{{ message.tags }}{% endif %}">
                         {{ message }}
                     </div>
-                {% endfor %}
-            {% endif %}
-        <div class="is-small field">
-          <div class="label">Name</div>
-          {{ form.name }}
+                    {% endfor %}
+                    {% endif %}
+
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="field">
+                            <label class="label">Grade Name</label>
+                            <div class="control">
+                                {{ form.name }}
+                            </div>
+                            {% if form.name.errors %}
+                            <p class="help is-danger">{{ form.name.errors|join:", " }}</p>
+                            {% endif %}
+                            <p class="help">Example: Grade 1, First Grade, Form 1, etc.</p>
+                        </div>
+
+                        <div class="field">
+                            <label class="label">Subjects</label>
+                            <div class="control">
+                                {{ form.subjects }}
+                            </div>
+                            {% if form.subjects.errors %}
+                            <p class="help is-danger">{{ form.subjects.errors|join:", " }}</p>
+                            {% endif %}
+                            <p class="help">Select all subjects that will be taught in this grade</p>
+                        </div>
+
+                        <div class="field is-grouped mt-5">
+                            <div class="control is-expanded">
+                                <button type="submit" class="button is-primary is-fullwidth">
+                                    Create Grade
+                                </button>
+                            </div>
+                            <div class="control">
+                                <a href="{% url 'subject_create' %}" class="button is-info">
+                                    Add New Subject
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="notification is-info is-light mt-4">
+                            <p>After creating grades, you'll be able to:</p>
+                            <ul class="ml-4 mt-2">
+                                <li>• Create classrooms for each grade</li>
+                                <li>• Assign teachers to subjects</li>
+                                <li>• Register students in specific grades</li>
+                            </ul>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-        <div class="is-small field">
-          <div class="label">Subjects</div>
-          {{ form.subjects}}
-        </div>
-      
-        </div>
-        <input type="submit" value="Submit" class="button is-primary">
     </div>
-    </form>
+</section>
 {% endblock %}
 

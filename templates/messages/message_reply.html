@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block page_title %}Reply to Message{% endblock %}
+
+{% block main_content %}
+<div class="container">
+    {% if messages %}
+    {% for message in messages %}
+    <div class="notification {% if message.tags %}is-{{ message.tags }}{% endif %}">
+        {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    <div class="box">
+        <h1 class="title">Reply to Message</h1>
+
+        <div class="box has-background-light mb-5">
+            <h3 class="title is-5">Original Message</h3>
+            <div class="message-details">
+                <p><strong>From:</strong> {{ parent_message.sender.get_full_name }}</p>
+                <p><strong>Subject:</strong> {{ parent_message.subject }}</p>
+                <p><strong>Date:</strong> {{ parent_message.created_at|date:"F j, Y, g:i a" }}</p>
+                <hr>
+                <div class="content">
+                    {{ parent_message.content|linebreaks }}
+                </div>
+            </div>
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="field">
+                <label class="label">Message</label>
+                <div class="control">
+                    {{ form.content }}
+                </div>
+                {% if form.content.errors %}
+                <p class="help is-danger">{{ form.content.errors|join:", " }}</p>
+                {% endif %}
+            </div>
+
+            <div class="field is-grouped mt-5">
+                <div class="control">
+                    <button type="submit" class="button is-primary">
+                        <span class="icon"><i class="fas fa-paper-plane"></i></span>
+                        <span>Send Reply</span>
+                    </button>
+                </div>
+                <div class="control">
+                    <a href="{% url 'message_detail' parent_message.pk %}" class="button is-light">
+                        <span class="icon"><i class="fas fa-times"></i></span>
+                        <span>Cancel</span>
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .textarea {
+        width: 100%;
+        min-height: 200px;
+    }
+    .message-details p {
+        margin-bottom: 0.5rem;
+    }
+</style>
+{% endblock %} 

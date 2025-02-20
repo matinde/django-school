@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+
+{% block page_title %}Assignments{% endblock %}
+
+{% block main_content %}
+<div class="container">
+    {% if messages %}
+    {% for message in messages %}
+    <div class="notification {% if message.tags %}is-{{ message.tags }}{% endif %}">
+        {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    <div class="level mb-6">
+        <div class="level-left">
+            <div class="level-item">
+                <h1 class="title">
+                    {% if user.user_type == 'teacher' %}My Assignments
+                    {% elif user.user_type == 'student' %}Class Assignments
+                    {% elif user.user_type == 'parent' %}Children's Assignments
+                    {% else %}All Assignments{% endif %}
+                </h1>
+            </div>
+        </div>
+        {% if user.user_type == 'teacher' or user.user_type == 'admin' %}
+        <div class="level-right">
+            <div class="level-item">
+                <a href="{% url 'assignment_create' %}" class="button is-primary">
+                    <span class="icon"><i class="fas fa-plus"></i></span>
+                    <span>Create Assignment</span>
+                </a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    {% if assignments %}
+    <div class="columns is-multiline">
+        {% for assignment in assignments %}
+        <div class="column is-12">
+            <div class="card">
+                <div class="card-content">
+                    <div class="level">
+                        <div class="level-left">
+                            <div class="level-item">
+                                <div>
+                                    <p class="title is-4">{{ assignment.title }}</p>
+                                    <p class="subtitle is-6">
+                                        <span class="tag is-info">{{ assignment.subject.name }}</span>
+                                        <span class="tag is-success">{{ assignment.grade.name }}</span>
+                                        <span class="tag is-warning">Due: {{ assignment.due_date }}</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="level-right">
+                            <div class="level-item">
+                                <div class="buttons">
+                                    <a href="{% url 'assignment_detail' assignment.pk %}" class="button is-info is-small">
+                                        <span class="icon"><i class="fas fa-eye"></i></span>
+                                        <span>View</span>
+                                    </a>
+                                    {% if user.user_type == 'teacher' and assignment.created_by == user.teacher_profile or user.user_type == 'admin' %}
+                                    <a href="{% url 'assignment_update' assignment.pk %}" class="button is-warning is-small">
+                                        <span class="icon"><i class="fas fa-edit"></i></span>
+                                        <span>Edit</span>
+                                    </a>
+                                    <a href="{% url 'assignment_delete' assignment.pk %}" class="button is-danger is-small">
+                                        <span class="icon"><i class="fas fa-trash"></i></span>
+                                        <span>Delete</span>
+                                    </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content mt-4">
+                        <p>{{ assignment.description|truncatewords:50 }}</p>
+                        <p class="has-text-grey is-size-7">
+                            Created by: {{ assignment.created_by.user.get_full_name }}
+                            on {{ assignment.created_date }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% if is_paginated %}
+    <nav class="pagination is-centered mt-6" role="navigation" aria-label="pagination">
+        {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}" class="pagination-previous">Previous</a>
+        {% else %}
+        <a class="pagination-previous" disabled>Previous</a>
+        {% endif %}
+
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}" class="pagination-next">Next</a>
+        {% else %}
+        <a class="pagination-next" disabled>Next</a>
+        {% endif %}
+
+        <ul class="pagination-list">
+            {% for i in paginator.page_range %}
+            <li>
+                <a href="?page={{ i }}" class="pagination-link {% if page_obj.number == i %}is-current{% endif %}" 
+                   aria-label="Page {{ i }}" aria-current="{% if page_obj.number == i %}page{% endif %}">
+                    {{ i }}
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+    </nav>
+    {% endif %}
+
+    {% else %}
+    <div class="notification is-info is-light">
+        <p class="has-text-centered">No assignments found.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %} 

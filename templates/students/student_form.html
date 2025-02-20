@@ -1,70 +1,191 @@
 {% extends 'base.html' %}
 
+{% block title %}{% if object %}Edit{% else %}Register{% endif %} Student{% endblock %}
+
 {% block content %}
-    <h1 class="title">Student Form</h1>
-    {% if form.errors %}
-        <div class="notification is-danger">
-            <ul class="list">
-                {% for field in form %}
-                    {% for error in field.errors %}
-                        <li>{{ error }}</li>
+<section class="section">
+    <div class="container">
+        <div class="columns is-centered">
+            <div class="column is-8">
+                <div class="box">
+                    <h1 class="title has-text-centered">{% if object %}Edit{% else %}Register{% endif %} Student</h1>
+                    
+                    {% if messages %}
+                    {% for message in messages %}
+                    <div class="notification {% if message.tags %}is-{{ message.tags }}{% endif %}">
+                        {{ message }}
+                    </div>
                     {% endfor %}
-                {% endfor %}
-            </ul>
-        </div>
-    {% endif %}
-    <form method="post">
-        {% csrf_token %}
-        <div class="column box is-6 is-centered">
-        <div class="is-small field">
-          <div class="label">First Name</div>
-          {{ form.first_name }}
-        </div>
-        <div class="is-small field">
-          <div class="label">Last Name</div>
-          {{ form.last_name }}
-        </div>
-        <div class="is-small field">
-          <div class="label">Status</div>
-          {{ form.current_status }}
-        </div>
-        <div class=" field">
-          <div class="label">Registration Number</div>
-          {{ form.registration_number}}
-        </div>
-        <div class=" field">
-          <div class="label">Admission Created</div>
-          {{ form.admission_date }}
-        </div>
-      
-        <div class=" field">
-          <div class="label">Photo</div>
-          {{ form.photo }}
-        </div>
-        <div class=" field">
-          <div class="label">School</div>
-          {{ form.school }}
-        </div>
-        <div class=" field">
-          <div class="label">Grade</div>
-          {{ form.grade }}
-        </div>
-      
-        <div class=" field">
-            <div class="label">Classroom</div>
-            {{ form.classroom }}
-          </div>
+                    {% endif %}
 
-          <div class=" field">
-            <div class="label">D.O.B</div>
-            {{ form.date_of_birth }}
-          </div>
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <div class="columns is-multiline">
+                            <!-- Personal Information -->
+                            <div class="column is-6">
+                                <div class="field">
+                                    <label class="label">First Name</label>
+                                    <div class="control">
+                                        {{ form.first_name }}
+                                    </div>
+                                    {% if form.first_name.errors %}
+                                    <p class="help is-danger">{{ form.first_name.errors|join:", " }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
 
-    
+                            <div class="column is-6">
+                                <div class="field">
+                                    <label class="label">Last Name</label>
+                                    <div class="control">
+                                        {{ form.last_name }}
+                                    </div>
+                                    {% if form.last_name.errors %}
+                                    <p class="help is-danger">{{ form.last_name.errors|join:", " }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="column is-6">
+                                <div class="field">
+                                    <label class="label">Email</label>
+                                    <div class="control">
+                                        {{ form.email }}
+                                    </div>
+                                    {% if form.email.errors %}
+                                    <p class="help is-danger">{{ form.email.errors|join:", " }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="column is-6">
+                                <div class="field">
+                                    <label class="label">Registration Number</label>
+                                    <div class="control">
+                                        {{ form.registration_number }}
+                                    </div>
+                                    {% if form.registration_number.errors %}
+                                    <p class="help is-danger">{{ form.registration_number.errors|join:", " }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <!-- Login Credentials -->
+                            <div class="column is-6">
+                                <div class="field">
+                                    <label class="label">Password</label>
+                                    <div class="control">
+                                        {{ form.password1 }}
+                                    </div>
+                                    {% if form.password1.errors %}
+                                    <p class="help is-danger">{{ form.password1.errors|join:", " }}</p>
+                                    {% endif %}
+                                    {% if form.password1.help_text %}
+                                    <p class="help">{{ form.password1.help_text }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="column is-6">
+                                <div class="field">
+                                    <label class="label">Confirm Password</label>
+                                    <div class="control">
+                                        {{ form.password2 }}
+                                    </div>
+                                    {% if form.password2.errors %}
+                                    <p class="help is-danger">{{ form.password2.errors|join:", " }}</p>
+                                    {% endif %}
+                                    {% if form.password2.help_text %}
+                                    <p class="help">{{ form.password2.help_text }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <!-- Academic Information -->
+                            <div class="column is-6">
+                                <div class="field">
+                                    <label class="label">Grade</label>
+                                    <div class="control">
+                                        <div class="select is-fullwidth">
+                                            {{ form.grade }}
+                                        </div>
+                                    </div>
+                                    {% if form.grade.errors %}
+                                    <p class="help is-danger">{{ form.grade.errors|join:", " }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="column is-6">
+                                <div class="field">
+                                    <label class="label">Classroom</label>
+                                    <div class="control">
+                                        <div class="select is-fullwidth">
+                                            {{ form.classroom }}
+                                        </div>
+                                    </div>
+                                    {% if form.classroom.errors %}
+                                    <p class="help is-danger">{{ form.classroom.errors|join:", " }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="column is-6">
+                                <div class="field">
+                                    <label class="label">Admission Date</label>
+                                    <div class="control">
+                                        {{ form.admission_date }}
+                                    </div>
+                                    {% if form.admission_date.errors %}
+                                    <p class="help is-danger">{{ form.admission_date.errors|join:", " }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="column is-6">
+                                <div class="field">
+                                    <label class="label">Date of Birth</label>
+                                    <div class="control">
+                                        {{ form.date_of_birth }}
+                                    </div>
+                                    {% if form.date_of_birth.errors %}
+                                    <p class="help is-danger">{{ form.date_of_birth.errors|join:", " }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <!-- Photo -->
+                            <div class="column is-12">
+                                <div class="field">
+                                    <label class="label">Photo</label>
+                                    <div class="control">
+                                        {{ form.photo }}
+                                    </div>
+                                    {% if form.photo.errors %}
+                                    <p class="help is-danger">{{ form.photo.errors|join:", " }}</p>
+                                    {% endif %}
+                                    <p class="help">Upload a photo of the student (optional)</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="field mt-5">
+                            <div class="control">
+                                <button type="submit" class="button is-primary is-fullwidth">
+                                    <span class="icon">
+                                        <i class="fas fa-save"></i>
+                                    </span>
+                                    <span>{% if object %}Update{% else %}Register{% endif %} Student</span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-        <input type="submit" value="Submit" class="button is-primary">
     </div>
-    </form>
+</section>
 {% endblock %}
 
 ["first_name", "last_name", "current_status", "registration_number", 

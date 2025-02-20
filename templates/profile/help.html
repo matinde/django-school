@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+
+{% block page_title %}Help & Support{% endblock %}
+
+{% block main_content %}
+<div class="container">
+    <div class="columns">
+        <!-- Quick Navigation Menu -->
+        <div class="column is-3">
+            <aside class="menu is-sticky" style="position: sticky; top: 20px;">
+                <p class="menu-label">Quick Navigation</p>
+                <ul class="menu-list">
+                    <li><a href="#getting-started">Getting Started</a></li>
+                    <li><a href="#faq">Frequently Asked Questions</a></li>
+                    <li><a href="#contact-support">Contact Support</a></li>
+                </ul>
+            </aside>
+        </div>
+
+        <!-- Main Content -->
+        <div class="column is-9">
+            <!-- Getting Started Section -->
+            <section id="getting-started" class="mb-6">
+                <h1 class="title">Getting Started</h1>
+
+                <!-- For Teachers -->
+                <div class="box">
+                    <h2 class="subtitle has-text-primary">For Teachers</h2>
+                    <div class="content">
+                        <ul>
+                            <li><strong>View Your Classes:</strong> Access your assigned classes from the dashboard.</li>
+                            <li><strong>Manage Students:</strong> View student profiles, track progress, and manage grades.</li>
+                            <li><strong>Create Assignments:</strong> Create and assign work to your classes.</li>
+                            <li><strong>Communication:</strong> Send messages to students, parents, or other teachers.</li>
+                            <li><strong>Track Progress:</strong> Monitor student performance and generate reports.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- For Students -->
+                <div class="box">
+                    <h2 class="subtitle has-text-info">For Students</h2>
+                    <div class="content">
+                        <ul>
+                            <li><strong>View Assignments:</strong> Check your current and upcoming assignments.</li>
+                            <li><strong>Submit Work:</strong> Upload and submit your completed assignments.</li>
+                            <li><strong>Track Grades:</strong> Monitor your grades and academic progress.</li>
+                            <li><strong>Communication:</strong> Message your teachers or classmates.</li>
+                            <li><strong>Resources:</strong> Access study materials and resources.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- For Parents -->
+                <div class="box">
+                    <h2 class="subtitle has-text-success">For Parents</h2>
+                    <div class="content">
+                        <ul>
+                            <li><strong>Monitor Progress:</strong> Track your child's academic performance.</li>
+                            <li><strong>View Assignments:</strong> See upcoming and completed assignments.</li>
+                            <li><strong>Communication:</strong> Message teachers and staff.</li>
+                            <li><strong>Attendance:</strong> Monitor your child's attendance records.</li>
+                            <li><strong>Updates:</strong> Receive important school announcements.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FAQ Section -->
+            <section id="faq" class="mb-6">
+                <h1 class="title">Frequently Asked Questions</h1>
+                
+                <div class="content">
+                    <div class="box">
+                        <h3 class="is-size-5 mb-2">How do I reset my password?</h3>
+                        <p>Click on "Forgot Password" on the login page. Enter your email address, and we'll send you instructions to reset your password.</p>
+                    </div>
+
+                    <div class="box">
+                        <h3 class="is-size-5 mb-2">How can I update my profile information?</h3>
+                        <p>Go to Settings in your profile menu. Here you can update your personal information, contact details, and notification preferences.</p>
+                    </div>
+
+                    <div class="box">
+                        <h3 class="is-size-5 mb-2">How do I contact my teacher?</h3>
+                        <p>Use the messaging system to send a direct message to your teacher. You can also view teacher contact information on their profile page.</p>
+                    </div>
+
+                    <div class="box">
+                        <h3 class="is-size-5 mb-2">Where can I find my assignments?</h3>
+                        <p>Click on the "Assignments" tab in your dashboard to view all current and upcoming assignments. You can filter by subject or due date.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Contact Support Section -->
+            <section id="contact-support" class="mb-6">
+                <h1 class="title">Contact Support</h1>
+                
+                <div class="box">
+                    <div class="content">
+                        <p class="mb-4">Our support team is here to help you with any questions or issues you may have.</p>
+                        
+                        <h3 class="is-size-5 mb-2">Support Hours</h3>
+                        <p>Monday - Friday: 8:00 AM - 5:00 PM</p>
+                        
+                        <h3 class="is-size-5 mb-2 mt-4">Contact Methods</h3>
+                        <ul>
+                            <li><strong>Email:</strong> support@schoolsystem.com</li>
+                            <li><strong>Phone:</strong> (555) 123-4567</li>
+                        </ul>
+                        
+                        <div class="notification is-info is-light mt-4">
+                            <p><strong>Note:</strong> For urgent matters outside of regular support hours, please contact your school administrator directly.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .menu {
+        background-color: #f5f5f5;
+        padding: 1rem;
+        border-radius: 4px;
+    }
+    section {
+        scroll-margin-top: 2rem;
+    }
+    .content ul {
+        margin-left: 1rem;
+    }
+</style>
+{% endblock %} 

@@ -1,0 +1,147 @@
+<div class="navbar-brand mb-4">
+    <a href="{% url 'home' %}" class="is-flex is-align-items-center p-4">
+        <span class="icon is-large has-text-primary">
+            <i class="fas fa-graduation-cap fa-2x"></i>
+        </span>
+        <h1 class="title is-4 ml-2">Django School</h1>
+    </a>
+</div>
+
+<div class="menu-container px-4">
+    <aside class="menu">
+        <p class="menu-label">Main</p>
+        <ul class="menu-list">
+            <li>
+                <a href="{% url 'home' %}" class="{% if request.path == '/' %}is-active{% endif %}">
+                    <span class="icon"><i class="fas fa-home"></i></span>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+
+            {% if user.user_type == 'admin' %}
+            <!-- Admin Menu Items -->
+            <li>
+                <a href="{% url 'students' %}" class="{% if 'students' in request.path %}is-active{% endif %}">
+                    <span class="icon"><i class="fas fa-user-graduate"></i></span>
+                    <span>Students</span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'teachers' %}" class="{% if 'teachers' in request.path %}is-active{% endif %}">
+                    <span class="icon"><i class="fas fa-chalkboard-teacher"></i></span>
+                    <span>Teachers</span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'parents' %}" class="{% if 'parents' in request.path %}is-active{% endif %}">
+                    <span class="icon"><i class="fas fa-users"></i></span>
+                    <span>Parents</span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'subjects' %}" class="{% if 'subjects' in request.path %}is-active{% endif %}">
+                    <span class="icon"><i class="fas fa-book"></i></span>
+                    <span>Subjects</span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'grades' %}" class="{% if 'grades' in request.path %}is-active{% endif %}">
+                    <span class="icon"><i class="fas fa-chart-line"></i></span>
+                    <span>Grades</span>
+                </a>
+            </li>
+
+            {% elif user.user_type == 'teacher' %}
+            <!-- Teacher Menu Items -->
+            <li>
+                <a href="{% url 'students' %}" class="{% if 'students' in request.path %}is-active{% endif %}">
+                    <span class="icon"><i class="fas fa-user-graduate"></i></span>
+                    <span>My Students</span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'assignments' %}" class="{% if 'assignments' in request.path %}is-active{% endif %}">
+                    <span class="icon"><i class="fas fa-tasks"></i></span>
+                    <span>Assignments</span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'messages' %}" class="{% if 'messages' in request.path %}is-active{% endif %}">
+                    <span class="icon"><i class="fas fa-envelope"></i></span>
+                    <span>Messages</span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'grades' %}" class="{% if 'grades' in request.path %}is-active{% endif %}">
+                    <span class="icon"><i class="fas fa-chart-line"></i></span>
+                    <span>Grades</span>
+                </a>
+            </li>
+
+            {% elif user.user_type == 'parent' %}
+            <!-- Parent Menu Items -->
+            <li>
+                <a href="{% url 'children' %}" class="{% if 'children' in request.path %}is-active{% endif %}">
+                    <span class="icon"><i class="fas fa-child"></i></span>
+                    <span>My Students</span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'messages' %}" class="{% if 'messages' in request.path %}is-active{% endif %}">
+                    <span class="icon"><i class="fas fa-envelope"></i></span>
+                    <span>Messages</span>
+                </a>
+            </li>
+
+            {% elif user.user_type == 'student' %}
+            <!-- Student Menu Items -->
+            <li>
+                <a href="{% url 'assignments' %}" class="{% if 'assignments' in request.path %}is-active{% endif %}">
+                    <span class="icon"><i class="fas fa-tasks"></i></span>
+                    <span>My Assignments</span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'grades' %}" class="{% if 'grades' in request.path %}is-active{% endif %}">
+                    <span class="icon"><i class="fas fa-chart-line"></i></span>
+                    <span>My Grades</span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'subjects' %}" class="{% if 'subjects' in request.path %}is-active{% endif %}">
+                    <span class="icon"><i class="fas fa-book"></i></span>
+                    <span>My Subjects</span>
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+
+        <p class="menu-label mt-6">Settings</p>
+        <ul class="menu-list">
+            <li>
+                <a href="{% url 'profile' %}">
+                    <span class="icon"><i class="fas fa-user-circle"></i></span>
+                    <span>My Profile</span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'settings' %}">
+                    <span class="icon"><i class="fas fa-cog"></i></span>
+                    <span>Settings</span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'help' %}">
+                    <span class="icon"><i class="fas fa-question-circle"></i></span>
+                    <span>Help</span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'logout' %}" class="has-text-danger">
+                    <span class="icon"><i class="fas fa-sign-out-alt"></i></span>
+                    <span>Logout</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
+</div> 

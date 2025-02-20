@@ -1,39 +1,106 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser, BaseUserManager
+from django.utils.translation import gettext_lazy as _
 import uuid
-from django.contrib.auth.models import User
 from .utils import get_upload_path
+from django.utils import timezone
+
+class CustomUserManager(BaseUserManager):
+    def create_user(self, email, password=None, **extra_fields):
+        if not email:
+            raise ValueError('The Email field must be set')
+        email = self.normalize_email(email)
+        user = self.model(email=email, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, email, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+        extra_fields.setdefault('user_type', 'admin')
+        extra_fields.setdefault('is_approved', True)
+        return self.create_user(email, password, **extra_fields)
+
+class user(AbstractUser):
+    USER_TYPES = [
+        ('admin', 'Administrator'),
+        ('teacher', 'Teacher'),
+        ('parent', 'Parent'),
+        ('student', 'Student')
+    ]
+
+    username = None
+    email = models.EmailField(_('email address'), unique=True)
+    user_type = models.CharField(max_length=10, choices=USER_TYPES)
+    school = models.ForeignKey('School', on_delete=models.CASCADE, null=True, blank=True)
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['first_name', 'last_name', 'user_type']
+
+    objects = CustomUserManager()
+
+    def __str__(self):
+        return f"{self.get_full_name()} ({self.get_user_type_display()})"
+
+    @property
+    def is_teacher(self):
+        return self.user_type == 'teacher'
+
+    @property
+    def is_parent(self):
+        return self.user_type == 'parent'
+
+    @property
+    def is_student(self):
+        return self.user_type == 'student'
+
+    @property
+    def is_admin(self):
+        return self.user_type == 'admin'
+
+    class Meta:
+        permissions = [
+            ("can_approve_users", "Can approve user registrations"),
+            ("can_view_dashboard", "Can view admin dashboard"),
+            ("can_manage_school", "Can manage school settings"),
+        ]
 
 class School(models.Model):
     name = models.CharField(max_length=255)
     address = models.CharField(max_length=255)
-    logo = models.ImageField()
+    logo = models.ImageField(upload_to='school_logos/')
     website = models.CharField(max_length=255)
     phone_numbers = models.CharField(max_length=255)
     motto = models.CharField(max_length=255)
     email = models.EmailField()
+    created_by = models.ForeignKey('django_school.user', on_delete=models.SET_NULL, null=True, related_name='schools_created')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.name
 
 class Teacher(models.Model):
-
     STATUS = [("active", "Active"), ("inactive", "Inactive")]
     GENDER = [("male", "Male"), ("female", "Female")]
     DEPARTMENT = [("sciences", "Sciences"), ("arts", "Arts"), ("commerce", "Commerce")]
 
-    uid = models.UUIDField(default=uuid.uuid4, editable=False)
-    current_status = models.CharField(max_length=10, choices=STATUS, default="active")
-    first_name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255)
-    email = models.EmailField()
-    phone_numbers = models.CharField(max_length=255)
+    user = models.OneToOneField(user, on_delete=models.CASCADE, related_name='teacher_profile')
+    status = models.CharField(max_length=10, choices=STATUS, default="inactive", help_text="Set to Active to approve the teacher")
     gender = models.CharField(max_length=10, choices=GENDER)
-    school = models.ForeignKey(School, on_delete=models.CASCADE)
     department = models.CharField(max_length=255, choices=DEPARTMENT, blank=True, null=True)
-    photo = models.ImageField()
+    photo = models.ImageField(upload_to='teacher_photos/', blank=True, null=True)
 
     def __str__(self):
-        return self.first_name + " " + self.last_name
+        return f"{self.user.get_full_name()} - {self.department}"
+
+    def save(self, *args, **kwargs):
+        # When teacher status changes, update user's active status
+        if self.status == 'active':
+            self.user.is_active = True
+            self.user.save()
+        super().save(*args, **kwargs)
 
 class Classroom(models.Model):
     name = models.CharField(max_length=255)
@@ -83,16 +150,11 @@ class Grade(models.Model):
 
 
 class Parent(models.Model):
-    uid = models.UUIDField(default=uuid.uuid4, editable=False)
-    first_name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255)
-    email = models.EmailField()
-    phone_numbers = models.CharField(max_length=255)
-    school = models.ForeignKey(School, on_delete=models.CASCADE)
+    user = models.OneToOneField(user, on_delete=models.CASCADE, related_name='parent_profile')
     identification_number = models.CharField(max_length=255)
 
     def __str__(self):
-        return self.first_name + " " + self.last_name
+        return self.user.get_full_name()
 
 class Student(models.Model):
     """
@@ -100,25 +162,19 @@ class Student(models.Model):
     and will also include the financial statements for each student. 
     """
 
-    STATUS = [("active", "Active"), ("inactive", "Inactive")]
     GENDER = [("male", "Male"), ("female", "Female")]
 
-    uid = models.UUIDField(primary_key=False, default=uuid.uuid4, editable=False)
-    current_status = models.CharField(max_length=10, choices=STATUS, default="active")
+    user = models.OneToOneField(user, on_delete=models.CASCADE, related_name='student_profile')
     registration_number = models.IntegerField()
     admission_date = models.DateField()
-    first_name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255)
-    photo = models.ImageField()
-    school = models.ForeignKey(School, on_delete=models.CASCADE)
     grade = models.ForeignKey(Grade, on_delete=models.CASCADE)
     classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE)
     date_of_birth = models.DateField()
+    photo = models.ImageField(upload_to='student_photos/', blank=True, null=True)
     parents = models.ManyToManyField(Parent, related_name='students', blank=True)
     
-    
     def __str__(self):
-        return self.first_name + " " + self.last_name
+        return self.user.get_full_name()
 
     def get_subjects(self):
         """
@@ -162,7 +218,7 @@ class Document(models.Model):
     
     title = models.CharField(max_length=255)
     file = models.FileField(upload_to=get_upload_path)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey('django_school.user', on_delete=models.CASCADE)
     user_type = models.CharField(max_length=10, choices=USER_TYPES)
     uploaded_at = models.DateTimeField(auto_now_add=True)
     description = models.TextField(blank=True)
@@ -176,3 +232,31 @@ class Document(models.Model):
     @property
     def file_url(self):
         return self.file.url if self.file else None
+
+class UserProfile(models.Model):
+    user = models.OneToOneField('django_school.user', on_delete=models.CASCADE, related_name='profile')
+    school = models.ForeignKey(School, on_delete=models.CASCADE, null=True, blank=True)
+    phone_number = models.CharField(max_length=20, blank=True)
+    address = models.TextField(blank=True)
+    bio = models.TextField(blank=True)
+    profile_picture = models.ImageField(upload_to='profile_pictures/', null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.user.get_full_name()}'s Profile"
+
+class Message(models.Model):
+    sender = models.ForeignKey(user, on_delete=models.CASCADE, related_name='sent_messages')
+    recipient = models.ForeignKey(user, on_delete=models.CASCADE, related_name='received_messages')
+    subject = models.CharField(max_length=255)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    read = models.BooleanField(default=False)
+    parent_message = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='replies')
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.subject} - From: {self.sender.get_full_name()} To: {self.recipient.get_full_name()}"

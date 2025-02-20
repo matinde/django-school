@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="columns is-centered">
+            <div class="column is-8">
+                <div class="box">
+                    <h1 class="title has-text-centered">School Registration</h1>
+                    <p class="subtitle has-text-centered">Set up your school's information</p>
+
+                    {% if messages %}
+                    {% for message in messages %}
+                    <div class="notification {% if message.tags %}is-{{ message.tags }}{% endif %}">
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <div class="columns is-multiline">
+                            <!-- School Name -->
+                            <div class="column is-6">
+                                <div class="field">
+                                    <label class="label">School Name</label>
+                                    <div class="control">
+                                        {{ form.name }}
+                                    </div>
+                                    {% if form.name.errors %}
+                                    <p class="help is-danger">{{ form.name.errors|join:", " }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <!-- Website -->
+                            <div class="column is-6">
+                                <div class="field">
+                                    <label class="label">Website</label>
+                                    <div class="control">
+                                        {{ form.website }}
+                                    </div>
+                                    {% if form.website.errors %}
+                                    <p class="help is-danger">{{ form.website.errors|join:", " }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <!-- Email -->
+                            <div class="column is-6">
+                                <div class="field">
+                                    <label class="label">Email</label>
+                                    <div class="control">
+                                        {{ form.email }}
+                                    </div>
+                                    {% if form.email.errors %}
+                                    <p class="help is-danger">{{ form.email.errors|join:", " }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <!-- Phone Numbers -->
+                            <div class="column is-6">
+                                <div class="field">
+                                    <label class="label">Phone Numbers</label>
+                                    <div class="control">
+                                        {{ form.phone_numbers }}
+                                    </div>
+                                    {% if form.phone_numbers.errors %}
+                                    <p class="help is-danger">{{ form.phone_numbers.errors|join:", " }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <!-- Address -->
+                            <div class="column is-12">
+                                <div class="field">
+                                    <label class="label">Address</label>
+                                    <div class="control">
+                                        {{ form.address }}
+                                    </div>
+                                    {% if form.address.errors %}
+                                    <p class="help is-danger">{{ form.address.errors|join:", " }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <!-- Motto -->
+                            <div class="column is-12">
+                                <div class="field">
+                                    <label class="label">School Motto</label>
+                                    <div class="control">
+                                        {{ form.motto }}
+                                    </div>
+                                    {% if form.motto.errors %}
+                                    <p class="help is-danger">{{ form.motto.errors|join:", " }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <!-- Logo -->
+                            <div class="column is-12">
+                                <div class="field">
+                                    <label class="label">School Logo</label>
+                                    <div class="control">
+                                        {{ form.logo }}
+                                    </div>
+                                    {% if form.logo.errors %}
+                                    <p class="help is-danger">{{ form.logo.errors|join:", " }}</p>
+                                    {% endif %}
+                                    <p class="help">Upload your school logo (recommended size: 200x200px)</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="field mt-5">
+                            <div class="control">
+                                <button type="submit" class="button is-primary is-fullwidth">
+                                    Register School
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %} 

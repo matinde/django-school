@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block page_title %}Delete Assignment{% endblock %}
+
+{% block main_content %}
+<div class="container">
+    <div class="box">
+        <h1 class="title has-text-danger">Delete Assignment</h1>
+        
+        <div class="content">
+            <p>Are you sure you want to delete the assignment "{{ assignment.title }}"?</p>
+            <p>This action cannot be undone.</p>
+            
+            <div class="box">
+                <h3 class="title is-5">Assignment Details</h3>
+                <table class="table is-fullwidth">
+                    <tr>
+                        <th>Title:</th>
+                        <td>{{ assignment.title }}</td>
+                    </tr>
+                    <tr>
+                        <th>Subject:</th>
+                        <td>{{ assignment.subject.name }}</td>
+                    </tr>
+                    <tr>
+                        <th>Grade:</th>
+                        <td>{{ assignment.grade.name }}</td>
+                    </tr>
+                    <tr>
+                        <th>Due Date:</th>
+                        <td>{{ assignment.due_date }}</td>
+                    </tr>
+                </table>
+            </div>
+
+            <form method="post">
+                {% csrf_token %}
+                <div class="field is-grouped">
+                    <div class="control">
+                        <button type="submit" class="button is-danger">
+                            <span class="icon"><i class="fas fa-trash"></i></span>
+                            <span>Delete Assignment</span>
+                        </button>
+                    </div>
+                    <div class="control">
+                        <a href="{% url 'assignment_detail' assignment.pk %}" class="button is-light">
+                            <span class="icon"><i class="fas fa-times"></i></span>
+                            <span>Cancel</span>
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %} 
